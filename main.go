@@ -4,16 +4,31 @@ import (
 	ant "ants/Functions"
 )
 
+var (
+	GraphList       = &ant.Graph{}
+	VerticesLength  = len(GraphList.Vertices)
+	VisitedVertices = make(map[string]bool)
+)
+
 func main() {
-	graph := &ant.Graph{}
 	data := ant.ReadFile()
 	roomsAndLinks := ant.HandleData(data)
 	linksFrom, linksTo, rooms := ant.GetRoomsAndLinks(roomsAndLinks)
 	for i := 0; i < len(rooms); i++ {
-		graph.AddVertix(rooms[i])
+		GraphList.AddVertix(rooms[i])
 	}
 	for i := 0; i < len(linksFrom); i++ {
-		graph.AddIndirectedEdge(linksFrom[i], linksTo[i])
+		GraphList.AddIndirectedEdge(linksFrom[i], linksTo[i])
 	}
-	graph.PrintGraph()
+	GraphList.PrintGraph()
+	search("1")
+}
+
+func search(at string) string {
+	if VisitedVertices[at] {
+		return search(at)
+	}
+	VisitedVertices[at] = true
+
+	return ""
 }
