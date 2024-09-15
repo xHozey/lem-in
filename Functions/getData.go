@@ -68,8 +68,9 @@ func GetRoomsAndLinks(s []string) ([]string, []string, []string) {
 	var linksFrom []string
 	var linksTo []string
 	var rooms []string
+	lockRooms := false
 	for _, val := range s {
-		if strings.Contains(val, " ") {
+		if !lockRooms && strings.Contains(val, " ") {
 			var room []string
 			val = strings.TrimSpace(val)
 			room = strings.Split(val, " ")
@@ -89,6 +90,7 @@ func GetRoomsAndLinks(s []string) ([]string, []string, []string) {
 				log.Fatal("ERROR: invalid data format")
 			}
 		} else if strings.Contains(val, "-") {
+			lockRooms = true
 			var link []string
 			link = strings.Split(val, "-")
 			if len(link) == 2 {
