@@ -1,34 +1,35 @@
 package ants
 
+import "fmt"
+
 type Graph struct {
 	Vertices []*Vertix
 }
 
 type Vertix struct {
-	Key      int
+	Key      string
 	Adjacent []*Vertix
 }
 
-func (g *Graph) AddVertix(name int) {
-	if !g.Contains(name) {
+func (g *Graph) AddVertix(name string) {
+	if !g.containsVertix(name) {
 		g.Vertices = append(g.Vertices, &Vertix{Key: name})
 	}
 }
 
-func (g *Graph) AddIndirectedEdge(from, to int) {
+func (g *Graph) AddIndirectedEdge(from, to string) {
 	fromVertix := g.getVertix(from)
 	toVertix := g.getVertix(to)
 	if fromVertix != nil && toVertix != nil {
-		if !g.Contains(to) {
+		if !g.containsAdjacent(to, fromVertix) && !g.containsAdjacent(from, toVertix) {
 			fromVertix.Adjacent = append(fromVertix.Adjacent, toVertix)
-		}
-		if !g.Contains(from) {
 			toVertix.Adjacent = append(toVertix.Adjacent, fromVertix)
+
 		}
 	}
 }
 
-func (g *Graph) getVertix(key int) *Vertix {
+func (g *Graph) getVertix(key string) *Vertix {
 	for i, v := range g.Vertices {
 		if v.Key == key {
 			return g.Vertices[i]
@@ -37,11 +38,30 @@ func (g *Graph) getVertix(key int) *Vertix {
 	return nil
 }
 
-func (g *Graph) Contains(key int) bool {
+func (g *Graph) containsAdjacent(key string, s *Vertix) bool {
+	for _, v := range s.Adjacent {
+		if v.Key == key {
+			return true
+		}
+	}
+	return false
+}
+
+func (g *Graph) containsVertix(key string) bool {
 	for _, v := range g.Vertices {
 		if v.Key == key {
 			return true
 		}
 	}
 	return false
+}
+
+func (g *Graph) PrintGraph() {
+	for _, val := range g.Vertices {
+		fmt.Printf("Room %v :", val.Key)
+		for _, v := range val.Adjacent {
+			fmt.Printf(" %v ", v.Key)
+		}
+		fmt.Println("")
+	}
 }
