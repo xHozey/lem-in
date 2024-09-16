@@ -1,34 +1,23 @@
 package main
 
 import (
-	ant "ants/Functions"
-)
-
-var (
-	GraphList       = &ant.Graph{}
-	VerticesLength  = len(GraphList.Vertices)
-	VisitedVertices = make(map[string]bool)
+	"fmt"
+	"lem/utils"
+	"os"
 )
 
 func main() {
-	data := ant.ReadFile()
-	roomsAndLinks := ant.HandleData(data)
-	linksFrom, linksTo, rooms := ant.GetRoomsAndLinks(roomsAndLinks)
-	for i := 0; i < len(rooms); i++ {
-		GraphList.AddVertix(rooms[i])
+	args := os.Args[1:]
+	if len(args) != 1 || !utils.CheckFileName(args[0]) {
+		fmt.Fprintln(os.Stderr, "Usage: go run . filename.txt")
+		return
 	}
-	for i := 0; i < len(linksFrom); i++ {
-		GraphList.AddIndirectedEdge(linksFrom[i], linksTo[i])
-	}
-	GraphList.PrintGraph()
-	search("1")
-}
 
-func search(at string) string {
-	if VisitedVertices[at] {
-		return search(at)
+	fileData, err := utils.ReadFile(args[0])
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Please Write a valid file")
+		return
 	}
-	VisitedVertices[at] = true
 
-	return ""
+	fmt.Println(utils.ParseData(fileData))
 }
