@@ -12,7 +12,7 @@ type Vertix struct {
 }
 
 func (g *Graph) AddVertix(name string) {
-	if !g.containsVertix(name) {
+	if !g.ContainsVertix(name) {
 		g.Vertices = append(g.Vertices, &Vertix{Key: name})
 	}
 }
@@ -47,7 +47,7 @@ func (g *Graph) containsAdjacent(key string, s *Vertix) bool {
 	return false
 }
 
-func (g *Graph) containsVertix(key string) bool {
+func (g *Graph) ContainsVertix(key string) bool {
 	for _, v := range g.Vertices {
 		if v.Key == key {
 			return true

@@ -1,13 +1,14 @@
 package ants
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 )
+
+var AntsRepresentaion []string
 
 func ReadFile() string {
 	args := os.Args[1:]
@@ -28,11 +29,11 @@ func ReadFile() string {
 	return string(data)
 }
 
-func HandleData(data string) []string {
+func HandleData(data string) ([]string, string, string) {
 	slicedData := strings.Split(data, "\n")
 	ants, err := strconv.Atoi(slicedData[0])
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("ERROR: invalid data format")
 	}
 	roomsOn := false
 	linksOn := false
@@ -42,26 +43,62 @@ func HandleData(data string) []string {
 	for i := 0; i < len(slicedData); i++ {
 		if slicedData[i] != "" {
 			if slicedData[i] == "##start" {
-				roomsOn = true
-				startRoom = slicedData[i+1]
+				if !roomsOn {
+					roomsOn = true
+					if i < len(slicedData)-1 && slicedData[i+1] != "" {
 
+						tempData := strings.Split(slicedData[i+1], " ")
+						startRoom = tempData[0]
+						_, err := strconv.Atoi(tempData[1])
+						if err != nil {
+							log.Fatal("ERROR: invalid data format")
+						}
+						_, err = strconv.Atoi(tempData[2])
+						if err != nil {
+							log.Fatal("ERROR: invalid data format")
+						}
+					} else {
+						log.Fatal("ERROR: invalid data format")
+					}
+
+				} else {
+					log.Fatal("ERROR: invalid data format")
+				}
 			}
 			if slicedData[i] == "##end" {
-				linksOn = true
-				endRoom = slicedData[i+1]
-
+				if !linksOn {
+					linksOn = true
+					if i < len(slicedData)-1 && slicedData[i+1] != "" {
+						tempData := strings.Split(slicedData[i+1], " ")
+						endRoom = tempData[0]
+						_, err := strconv.Atoi(tempData[1])
+						if err != nil {
+							log.Fatal("ERROR: invalid data format")
+						}
+						_, err = strconv.Atoi(tempData[2])
+						if err != nil {
+							log.Fatal("ERROR: invalid data format")
+						}
+					} else {
+						log.Fatal("ERROR: invalid data format")
+					}
+				} else {
+					log.Fatal("ERROR: invalid data format")
+				}
 			}
 			roomsAndLinks = append(roomsAndLinks, slicedData[i])
+		} else {
+			log.Fatal("ERROR: invalid data format")
 		}
 	}
 	if !roomsOn || !linksOn {
 		log.Fatal("ERROR: invalid data format")
 	}
+	for i := 1; i <= ants; i++ {
+		AntsRepresentaion = append(AntsRepresentaion, "L"+strconv.Itoa(i))
+	}
 
-	fmt.Println(startRoom)
-	fmt.Println(endRoom)
-	fmt.Println(ants)
-	return roomsAndLinks
+	return roomsAndLinks, startRoom, endRoom
 }
 
 func GetRoomsAndLinks(s []string) ([]string, []string, []string) {
