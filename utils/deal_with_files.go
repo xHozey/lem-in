@@ -63,8 +63,10 @@ func ParseData(data string) (Data, error) {
 
 			if start {
 				parsedData.Start = room
+				start = false
 			} else if end {
 				parsedData.End = room
+				end = false
 			}
 
 			parsedData.Rooms = append(parsedData.Rooms, room)

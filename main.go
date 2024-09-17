@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"lem/utils"
 	"os"
+
+	"lem/utils"
 )
 
 func main() {
@@ -19,5 +20,35 @@ func main() {
 		return
 	}
 
-	fmt.Println(utils.ParseData(fileData))
+	parsedData, err := utils.ParseData(fileData)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Please Write a valid file")
+		return
+	}
+
+	graph := utils.Graph{}
+
+	for _, room := range parsedData.Rooms {
+		graph.AddVertex(room)
+	}
+
+	for _, links := range parsedData.Links {
+		graph.AddEdge(links[0], links[1])
+	}
+
+	paths := [][]string{}
+	startVertex := utils.GetVertex(graph.Vertecies, parsedData.Start)
+	targetVertex := utils.GetVertex(graph.Vertecies, parsedData.End)
+
+	graph.CDFS(startVertex, targetVertex, []string{}, &paths)
+	utils.Sort(&paths)
+
+	/*for _, path := range paths {
+		fmt.Println(path)
+	}
+	fmt.Println("##################################")*/
+
+	res := utils.GoTo(paths, parsedData.Ants)
+
+	utils.Printer(res)
 }
