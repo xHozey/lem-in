@@ -43,10 +43,10 @@ func main() {
 	graph.CDFS(startVertex, targetVertex, []string{}, &paths)
 	utils.Sort(&paths)
 
-	/*for _, path := range paths {
+	for _, path := range paths {
 		fmt.Println(path)
 	}
-	fmt.Println("##################################")*/
+	fmt.Println("##################################")
 
 	res := utils.GoTo(paths, parsedData.Ants)
 

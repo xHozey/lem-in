@@ -1,13 +1,15 @@
 package utils
 
-import (
-	"fmt"
-	"slices"
-)
+import "slices"
 
 type Road struct {
 	TheRoad []string
 	Step    int
+}
+
+type Step struct {
+	Turn      int
+	RoomIndex int
 }
 
 func (g *Graph) CDFS(source *Vertex, target *Vertex, path []string, paths *[][]string) {
@@ -37,10 +39,9 @@ func GoTo(paths [][]string, ants int) map[int]Road {
 
 	step := 1
 	for antsCount > 0 {
-		fmt.Println(antsCount)
 		for i := 1; i <= ants; i++ {
 			if antsArrived[i] {
-				antsCount--
+				antsCount = ants - len(antsArrived)
 				continue
 			}
 
@@ -63,13 +64,13 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 
 		for roomIndex, room := range path {
 
-			isRoomFill := slices.Contains((*fillRoom)[room], step)
+			isRoomFill := slices.Contains((*fillRoom)[room], step+roomIndex)
 
 			if isRoomFill {
 				break
 			}
 			if roomIndex != len(path)-1 && roomIndex != 0 {
-				rooms[room] = step
+				rooms[room] = step + roomIndex
 			}
 
 			roadOfAnt = append(roadOfAnt, room)

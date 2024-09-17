@@ -59,3 +59,13 @@ func Sort(paths *[][]string) {
 		}
 	}
 }
+
+func StepContains(steps []Step, step Step) bool {
+	for _, s := range steps {
+		if s.RoomIndex == step.RoomIndex && s.Turn == step.Turn {
+			return true
+		}
+	}
+
+	return false
+}
