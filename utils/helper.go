@@ -1,10 +1,5 @@
 package utils
 
-import (
-	"fmt"
-	"strings"
-)
-
 func GetVertex(vertecies []*Vertex, key string) *Vertex {
 	for _, vertex := range vertecies {
 		if vertex.Key == key {
@@ -15,57 +10,41 @@ func GetVertex(vertecies []*Vertex, key string) *Vertex {
 	return nil
 }
 
-func Printer(paths map[int]Road) {
-	res := make([][]string, findResLength(paths))
-	for ant, path := range paths {
-		for i, room := range path.TheRoad[1:] {
-			p := fmt.Sprintf("L%d-%s", ant, room)
-			if len(res) > i {
-				res[i+path.Step-1] = append(res[i+path.Step-1], p)
+func Printer(ant int, paths map[int][]string) {
+	roads := []string{}
+
+	for key, path := range paths {
+		line := 0
+		for _, room := range path {
+			if len(roads) > line {
+				// add room to the index
+			} else {
+				// append
 			}
-		}
-	}
-
-	for _, p := range res {
-		fmt.Println(strings.Join(p, " "))
-	}
-}
-
-func findResLength(paths map[int]Road) int {
-	maxPath := 0
-	maxStep := 0
-
-	for _, path := range paths {
-		if maxPath < len(path.TheRoad) {
-			maxPath = len(path.TheRoad)
-		}
-
-		if maxStep < path.Step {
-			maxStep = path.Step
-		}
-	}
-
-	return maxPath + maxStep - 2
-}
-
-func Sort(paths *[][]string) {
-	for i := 0; i < len((*paths)); i++ {
-		for j := 0; j < len((*paths)); j++ {
-			if len((*paths)[i]) < len((*paths)[j]) {
-				temp := (*paths)[i]
-				(*paths)[i] = (*paths)[j]
-				(*paths)[j] = temp
-			}
+			line++
 		}
 	}
 }
 
-func StepContains(steps []Step, step Step) bool {
-	for _, s := range steps {
-		if s.RoomIndex == step.RoomIndex && s.Turn == step.Turn {
-			return true
+func PathToScorePath(paths *[][]string) map[int]int {
+	res := map[int]int{}
+	for i, path := range *paths {
+		res[i] = len(path)
+	}
+
+	return res
+}
+
+func GetMinPath(pathsScore *map[int]int, paths *[][]string) (int, []string) {
+	min := 0
+	minVal := (*pathsScore)[0]
+
+	for key, path := range *pathsScore {
+		if minVal >= path {
+			minVal = path
+			min = key
 		}
 	}
 
-	return false
+	return min, (*paths)[min]
 }

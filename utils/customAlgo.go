@@ -1,17 +1,5 @@
 package utils
 
-import "slices"
-
-type Road struct {
-	TheRoad []string
-	Step    int
-}
-
-type Step struct {
-	Turn      int
-	RoomIndex int
-}
-
 func (g *Graph) CDFS(source *Vertex, target *Vertex, path []string, paths *[][]string) {
 	source.Visted = true
 	path = append(path, source.Key)
@@ -31,73 +19,18 @@ func (g *Graph) CDFS(source *Vertex, target *Vertex, path []string, paths *[][]s
 	source.Visted = false
 }
 
-func GoTo(paths [][]string, ants int) map[int]Road {
-	road := map[int]Road{}
-	antsCount := ants
-	antsArrived := map[int]bool{}
-	fillRoom := map[string][]int{}
-	tunnels := map[string][]int{}
+func GoTo(paths [][]string, ants int) map[int][]string {
+	// slice of path -> ants
+	roads := map[int][]string{}
 
-	step := 1
-	for antsCount > 0 {
-		for i := 1; i <= ants; i++ {
-			if antsArrived[i] {
-				antsCount = ants - len(antsArrived)
-				continue
-			}
+	// score path map
+	scoredPaths := PathToScorePath(&paths)
 
-			AntsGoing(i, &paths, &fillRoom, &antsArrived, &road, &tunnels, step)
-		}
-		step++
+	for i := 1; i <= ants; i++ {
+		index, minPath := GetMinPath(&scoredPaths, &paths)
+		scoredPaths[index]++
+		roads[i] = minPath[1:]
 	}
 
-	return road
-}
-
-func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArrived *map[int]bool, road *map[int]Road, tunnels *map[string][]int, step int) {
-	rooms := map[string]int{}
-	for _, path := range *paths {
-		/* (*fillPath)[pIndex] = true */
-
-		// Clean up the road
-
-		roadOfAnt := []string{}
-
-		for roomIndex, room := range path {
-
-			isRoomFill := slices.Contains((*fillRoom)[room], step+roomIndex)
-
-			if roomIndex+1 < len(path) {
-				tunnelKey := room + "-" + path[roomIndex+1]
-				isTunnelExist := slices.Contains((*tunnels)[tunnelKey], step+roomIndex)
-				if isTunnelExist {
-					break
-				} else {
-					(*tunnels)[tunnelKey] = append((*tunnels)[tunnelKey], step+roomIndex)
-				}
-			}
-
-			if isRoomFill {
-				break
-			}
-			if roomIndex != len(path)-1 && roomIndex != 0 {
-				rooms[room] = step + roomIndex
-			}
-
-			roadOfAnt = append(roadOfAnt, room)
-
-			if roomIndex == len(path)-1 {
-
-				(*road)[ant] = Road{TheRoad: roadOfAnt, Step: step}
-
-				(*antsArrived)[ant] = true
-
-				for r, s := range rooms {
-					(*fillRoom)[r] = append((*fillRoom)[r], s)
-				}
-
-				return
-			}
-		}
-	}
+	return roads
 }

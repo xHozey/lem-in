@@ -41,14 +41,13 @@ func main() {
 	targetVertex := utils.GetVertex(graph.Vertecies, parsedData.End)
 
 	graph.CDFS(startVertex, targetVertex, []string{}, &paths)
-	utils.Sort(&paths)
 
-	for _, path := range paths {
-		fmt.Println(path)
-	}
-	fmt.Println("##################################")
+	/* 	for _, path := range paths {
+	   		fmt.Println(path)
+	   	}
+	   	fmt.Println("##################################") */
 
 	res := utils.GoTo(paths, parsedData.Ants)
 
-	utils.Printer(res)
+	utils.Printer(parsedData.Ants, res)
 }
