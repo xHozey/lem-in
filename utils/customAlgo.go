@@ -36,6 +36,7 @@ func GoTo(paths [][]string, ants int) map[int]Road {
 	antsCount := ants
 	antsArrived := map[int]bool{}
 	fillRoom := map[string][]int{}
+	tunnels := map[string][]int{}
 
 	step := 1
 	for antsCount > 0 {
@@ -45,7 +46,7 @@ func GoTo(paths [][]string, ants int) map[int]Road {
 				continue
 			}
 
-			AntsGoing(i, &paths, &fillRoom, &antsArrived, &road, step)
+			AntsGoing(i, &paths, &fillRoom, &antsArrived, &road, &tunnels, step)
 		}
 		step++
 	}
@@ -53,7 +54,7 @@ func GoTo(paths [][]string, ants int) map[int]Road {
 	return road
 }
 
-func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArrived *map[int]bool, road *map[int]Road, step int) {
+func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArrived *map[int]bool, road *map[int]Road, tunnels *map[string][]int, step int) {
 	rooms := map[string]int{}
 	for _, path := range *paths {
 		/* (*fillPath)[pIndex] = true */
@@ -65,6 +66,16 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 		for roomIndex, room := range path {
 
 			isRoomFill := slices.Contains((*fillRoom)[room], step+roomIndex)
+
+			if roomIndex+1 < len(path) {
+				tunnelKey := room + "-" + path[roomIndex+1]
+				isTunnelExist := slices.Contains((*tunnels)[tunnelKey], step+roomIndex)
+				if isTunnelExist {
+					break
+				} else {
+					(*tunnels)[tunnelKey] = append((*tunnels)[tunnelKey], step+roomIndex)
+				}
+			}
 
 			if isRoomFill {
 				break
