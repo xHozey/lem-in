@@ -1,5 +1,7 @@
 package utils
 
+import "fmt"
+
 func GetVertex(vertecies []*Vertex, key string) *Vertex {
 	for _, vertex := range vertecies {
 		if vertex.Key == key {
@@ -11,18 +13,18 @@ func GetVertex(vertecies []*Vertex, key string) *Vertex {
 }
 
 func Printer(ant int, paths map[int][]string) {
-	roads := []string{}
+	roads := map[int]string{}
 
 	for key, path := range paths {
 		line := 0
 		for _, room := range path {
-			if len(roads) > line {
-				// add room to the index
-			} else {
-				// append
-			}
+			roads[line] += fmt.Sprintf("L%d-%s ", key, room)
 			line++
 		}
+	}
+
+	for _, r := range roads {
+		fmt.Println(r)
 	}
 }
 
