@@ -31,7 +31,7 @@ func (g *Graph) CDFS(source *Vertex, target *Vertex, path []string, paths *[][]s
 	source.Visted = false
 }
 
-func GoTo(paths [][]string, ants int) map[int]Road {
+func GoTo(paths *[][]string, dup *Scoretype, ants int) map[int]Road {
 	road := map[int]Road{}
 	antsCount := ants
 	antsArrived := map[int]bool{}
@@ -46,7 +46,7 @@ func GoTo(paths [][]string, ants int) map[int]Road {
 				continue
 			}
 
-			AntsGoing(i, &paths, &fillRoom, &antsArrived, &road, &tunnels, step)
+			AntsGoing(i, paths, &fillRoom, &antsArrived, &road, &tunnels, dup, step)
 		}
 		step++
 	}
@@ -54,9 +54,9 @@ func GoTo(paths [][]string, ants int) map[int]Road {
 	return road
 }
 
-func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArrived *map[int]bool, road *map[int]Road, tunnels *map[string][]int, step int) {
+func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArrived *map[int]bool, road *map[int]Road, tunnels *map[string][]int, dup *Scoretype, step int) {
 	rooms := map[string]int{}
-	for _, path := range *paths {
+	for pathIndex, path := range *paths {
 		/* (*fillPath)[pIndex] = true */
 
 		// Clean up the road
@@ -87,6 +87,9 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 			roadOfAnt = append(roadOfAnt, room)
 
 			if roomIndex == len(path)-1 {
+				(*dup)[pathIndex].score++
+
+				// Sort(paths, dup)
 
 				(*road)[ant] = Road{TheRoad: roadOfAnt, Step: step}
 

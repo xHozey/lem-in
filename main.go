@@ -45,12 +45,19 @@ func main() {
 	dup := utils.Duplicated(&paths)
 	utils.Sort(&paths, &dup)
 
-	/* 	for _, path := range paths {
-	   		fmt.Println(path)
-	   	}
-	   	fmt.Println("##################################") */
+	fmt.Println("Paths")
+	for _, path := range paths {
+		fmt.Println(path)
+	}
+	fmt.Println("##################################")
 
-	res := utils.GoTo(paths, parsedData.Ants)
+	fmt.Println("Dup")
+	for _, path := range dup {
+		fmt.Println(path)
+	}
+	fmt.Println("##################################")
+
+	res := utils.GoTo(&paths, &dup, parsedData.Ants)
 
 	utils.Printer(res)
 }

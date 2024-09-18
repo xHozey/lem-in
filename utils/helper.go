@@ -89,7 +89,7 @@ func Duplicated(paths *[][]string) Scoretype {
 	for i, path := range *paths {
 		res[i].score -= len(path)
 		res[i].path = i
-		for _, room := range path {
+		for _, room := range path[1 : len(path)-1] {
 			if chars[room] == 0 {
 				chars[room] = GetRoomCount(room, paths)
 			}
