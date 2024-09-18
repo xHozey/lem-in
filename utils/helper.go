@@ -5,6 +5,11 @@ import (
 	"strings"
 )
 
+type Scoretype []struct {
+	path  int
+	score int
+}
+
 func GetVertex(vertecies []*Vertex, key string) *Vertex {
 	for _, vertex := range vertecies {
 		if vertex.Key == key {
@@ -48,16 +53,23 @@ func findResLength(paths map[int]Road) int {
 	return maxPath + maxStep - 2
 }
 
-func Sort(paths *[][]string) {
-	for i := 0; i < len((*paths)); i++ {
-		for j := 0; j < len((*paths)); j++ {
-			if len((*paths)[i]) < len((*paths)[j]) {
-				temp := (*paths)[i]
-				(*paths)[i] = (*paths)[j]
-				(*paths)[j] = temp
+func Sort(paths *[][]string, scoring *Scoretype) {
+	for i := 0; i < len(*scoring); i++ {
+		for j := 0; j < len(*scoring); j++ {
+			if (*scoring)[i].score < (*scoring)[j].score {
+				temp := (*scoring)[i]
+				(*scoring)[i] = (*scoring)[j]
+				(*scoring)[j] = temp
 			}
 		}
 	}
+
+	res := make([][]string, len(*paths))
+	for i, s := range *scoring {
+		res[i] = (*paths)[s.path]
+	}
+
+	*paths = res
 }
 
 func StepContains(steps []Step, step Step) bool {
@@ -68,4 +80,35 @@ func StepContains(steps []Step, step Step) bool {
 	}
 
 	return false
+}
+
+func Duplicated(paths *[][]string) Scoretype {
+	res := make(Scoretype, len(*paths))
+	chars := map[string]int{}
+
+	for i, path := range *paths {
+		res[i].score -= len(path)
+		res[i].path = i
+		for _, room := range path {
+			if chars[room] == 0 {
+				chars[room] = GetRoomCount(room, paths)
+			}
+			res[i].score += chars[room]
+		}
+	}
+
+	return res
+}
+
+func GetRoomCount(room string, paths *[][]string) int {
+	res := 0
+	for _, path := range *paths {
+		for _, r := range path {
+			if room == r {
+				res++
+			}
+		}
+	}
+
+	return res
 }
