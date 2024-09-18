@@ -1,3 +1,4 @@
-knowing tunnels between channels 
-get path depend on coast not just visited
+create a map of path -> ants
+create a map of paths that has path index -> path len and the len increase each time an ant go on it
+select paths based on the len
 ignoring paths to let other pathes based on coast
