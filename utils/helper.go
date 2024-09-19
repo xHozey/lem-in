@@ -72,28 +72,13 @@ func Sort(paths *[][]string, scoring *Scoretype) {
 	*paths = res
 }
 
-func StepContains(steps []Step, step Step) bool {
-	for _, s := range steps {
-		if s.RoomIndex == step.RoomIndex && s.Turn == step.Turn {
-			return true
-		}
-	}
-
-	return false
-}
-
 func Duplicated(paths *[][]string) Scoretype {
 	res := make(Scoretype, len(*paths))
-	chars := map[string]int{}
-
 	for i, path := range *paths {
 		res[i].score -= len(path)
 		res[i].path = i
 		for _, room := range path[1 : len(path)-1] {
-			if chars[room] == 0 {
-				chars[room] = GetRoomCount(room, paths)
-			}
-			res[i].score += chars[room]
+			res[i].score += RoomsCounter[room]
 		}
 	}
 

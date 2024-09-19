@@ -2,6 +2,8 @@ package utils
 
 import "fmt"
 
+var RoomsCounter = map[string]int{}
+
 type Graph struct {
 	Vertecies []*Vertex
 }
@@ -39,6 +41,8 @@ func (g *Graph) AddEdge(from string, to string) {
 		return
 	}
 
+	RoomsCounter[from]++
+	RoomsCounter[to]++
 	fromVertex.Adjacments = append(fromVertex.Adjacments, toVertex)
 	toVertex.Adjacments = append(toVertex.Adjacments, fromVertex)
 }

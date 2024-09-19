@@ -1,6 +1,9 @@
 package utils
 
-import "slices"
+import (
+	"fmt"
+	"slices"
+)
 
 type Road struct {
 	TheRoad []string
@@ -45,9 +48,10 @@ func GoTo(paths *[][]string, dup *Scoretype, ants int) map[int]Road {
 				antsCount = ants - len(antsArrived)
 				continue
 			}
-
 			AntsGoing(i, paths, &fillRoom, &antsArrived, &road, &tunnels, dup, step)
 		}
+		*dup = Duplicated(paths)
+		Sort(paths, dup)
 		step++
 	}
 
@@ -56,51 +60,58 @@ func GoTo(paths *[][]string, dup *Scoretype, ants int) map[int]Road {
 
 func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArrived *map[int]bool, road *map[int]Road, tunnels *map[string][]int, dup *Scoretype, step int) {
 	rooms := map[string]int{}
-	for pathIndex, path := range *paths {
-		/* (*fillPath)[pIndex] = true */
 
-		// Clean up the road
+	path := (*paths)[0]
+	pathIndex := 0
+	/* (*fillPath)[pIndex] = true */
 
-		roadOfAnt := []string{}
+	// Clean up the road
 
-		for roomIndex, room := range path {
+	roadOfAnt := []string{}
 
-			isRoomFill := slices.Contains((*fillRoom)[room], step+roomIndex)
+	for roomIndex, room := range path {
 
-			if roomIndex+1 < len(path) {
-				tunnelKey := room + "-" + path[roomIndex+1]
-				isTunnelExist := slices.Contains((*tunnels)[tunnelKey], step+roomIndex)
-				if isTunnelExist {
-					break
-				} else {
-					(*tunnels)[tunnelKey] = append((*tunnels)[tunnelKey], step+roomIndex)
-				}
-			}
+		isRoomFill := slices.Contains((*fillRoom)[room], step+roomIndex)
 
-			if isRoomFill {
+		if roomIndex+1 < len(path) {
+			tunnelKey := room + "-" + path[roomIndex+1]
+			isTunnelExist := slices.Contains((*tunnels)[tunnelKey], step+roomIndex)
+			if isTunnelExist {
 				break
+			} else {
+				(*tunnels)[tunnelKey] = append((*tunnels)[tunnelKey], step+roomIndex)
 			}
-			if roomIndex != len(path)-1 && roomIndex != 0 {
-				rooms[room] = step + roomIndex
+		}
+
+		if isRoomFill {
+			break
+		}
+		if roomIndex != len(path)-1 && roomIndex != 0 {
+			rooms[room] = step + roomIndex
+		}
+
+		roadOfAnt = append(roadOfAnt, room)
+
+		if roomIndex == len(path)-1 {
+			(*dup)[pathIndex].score++
+
+			Sort(paths, dup)
+
+			fmt.Println("Dup")
+			for _, path := range *dup {
+				fmt.Println(path)
+			}
+			fmt.Println("##################################")
+
+			(*road)[ant] = Road{TheRoad: roadOfAnt, Step: step}
+
+			(*antsArrived)[ant] = true
+
+			for r, s := range rooms {
+				(*fillRoom)[r] = append((*fillRoom)[r], s)
 			}
 
-			roadOfAnt = append(roadOfAnt, room)
-
-			if roomIndex == len(path)-1 {
-				(*dup)[pathIndex].score++
-
-				// Sort(paths, dup)
-
-				(*road)[ant] = Road{TheRoad: roadOfAnt, Step: step}
-
-				(*antsArrived)[ant] = true
-
-				for r, s := range rooms {
-					(*fillRoom)[r] = append((*fillRoom)[r], s)
-				}
-
-				return
-			}
+			return
 		}
 	}
 }
