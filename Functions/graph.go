@@ -9,6 +9,7 @@ type Graph struct {
 type Vertix struct {
 	Key      string
 	Adjacent []*Vertix
+	counter  int
 }
 
 func (g *Graph) AddVertix(name string) {
@@ -22,9 +23,10 @@ func (g *Graph) AddIndirectedEdge(from, to string) {
 	toVertix := g.getVertix(to)
 	if fromVertix != nil && toVertix != nil {
 		if !g.containsAdjacent(to, fromVertix) && !g.containsAdjacent(from, toVertix) {
+			fromVertix.counter++
+			toVertix.counter++
 			fromVertix.Adjacent = append(fromVertix.Adjacent, toVertix)
 			toVertix.Adjacent = append(toVertix.Adjacent, fromVertix)
-
 		}
 	}
 }

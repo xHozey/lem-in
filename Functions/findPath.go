@@ -10,7 +10,6 @@ var (
 func (g *Graph) Dfs(start, end string) {
 	currentPath = append(currentPath, start)
 	if start == end {
-
 		ShortestPath = make([]string, len(currentPath))
 		copy(ShortestPath, currentPath)
 		PossiblePaths = append(PossiblePaths, ShortestPath)

@@ -19,5 +19,7 @@ func main() {
 	}
 	graphList.Dfs(start, end)
 	ant.Travel()
+
 	fmt.Println(ant.PossiblePaths)
+	graphList.ValidPath()
 }
