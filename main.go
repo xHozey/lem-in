@@ -46,13 +46,19 @@ func main() {
 	utils.Sort(&paths, &dup)
 
 	fmt.Println("Paths")
-	for _, path := range paths {
+	for i, path := range paths {
+		if i == 6 {
+			break
+		}
 		fmt.Println(path)
 	}
 	fmt.Println("##################################")
 
 	fmt.Println("Dup")
-	for _, path := range dup {
+	for i, path := range dup {
+		if i == 6 {
+			break
+		}
 		fmt.Println(path)
 	}
 	fmt.Println("##################################")

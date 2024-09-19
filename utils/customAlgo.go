@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"slices"
 )
 
@@ -77,6 +76,9 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 			tunnelKey := room + "-" + path[roomIndex+1]
 			isTunnelExist := slices.Contains((*tunnels)[tunnelKey], step+roomIndex)
 			if isTunnelExist {
+				(*dup)[pathIndex].score++
+
+				Sort(paths, dup)
 				break
 			} else {
 				(*tunnels)[tunnelKey] = append((*tunnels)[tunnelKey], step+roomIndex)
@@ -96,12 +98,6 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 			(*dup)[pathIndex].score++
 
 			Sort(paths, dup)
-
-			fmt.Println("Dup")
-			for _, path := range *dup {
-				fmt.Println(path)
-			}
-			fmt.Println("##################################")
 
 			(*road)[ant] = Road{TheRoad: roadOfAnt, Step: step}
 

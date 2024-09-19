@@ -56,7 +56,7 @@ func findResLength(paths map[int]Road) int {
 func Sort(paths *[][]string, scoring *Scoretype) {
 	for i := 0; i < len(*scoring); i++ {
 		for j := 0; j < len(*scoring); j++ {
-			if (*scoring)[i].score < (*scoring)[j].score {
+			if (*scoring)[i].score <= (*scoring)[j].score {
 				temp := (*scoring)[i]
 				(*scoring)[i] = (*scoring)[j]
 				(*scoring)[j] = temp
@@ -67,6 +67,7 @@ func Sort(paths *[][]string, scoring *Scoretype) {
 	res := make([][]string, len(*paths))
 	for i, s := range *scoring {
 		res[i] = (*paths)[s.path]
+		(*scoring)[i].path = i
 	}
 
 	*paths = res
