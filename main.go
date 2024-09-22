@@ -41,31 +41,21 @@ func main() {
 	targetVertex := utils.GetVertex(graph.Vertecies, parsedData.End)
 
 	graph.CDFS(startVertex, targetVertex, []string{}, &paths)
+	utils.Sort(&paths)
 
-	dup := utils.Duplicated(&paths)
-	utils.RateSort(&paths, &dup)
+	disjointPaths := utils.SepRoads(&paths)
 
-	fmt.Println("Paths")
-	for _, path := range paths {
-		fmt.Println(path)
+	results := []string{}
+
+	for _, combPaths := range disjointPaths {
+		dup := utils.Duplicated(&combPaths)
+		utils.RateSort(&combPaths, &dup)
+
+		res := utils.GoTo(&combPaths, &dup, parsedData.Ants)
+
+		strRes := utils.Printer(res)
+		results = append(results, strRes)
 	}
-	fmt.Println("##################################")
 
-	fmt.Println("Dup")
-	for i, path := range dup {
-		if i == 6 {
-			break
-		}
-		fmt.Println(path)
-	}
-	fmt.Println("##################################")
-
-	res := utils.GoTo(&paths, &dup, parsedData.Ants)
-
-	strRes := utils.Printer(res)
-	fmt.Print(strRes)
-
-	fmt.Println("##############################")
-	rres := utils.SepRoads(&paths)
-	fmt.Println(rres)
+	fmt.Println(utils.GetMinPath(results))
 }

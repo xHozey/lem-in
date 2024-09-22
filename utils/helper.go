@@ -33,7 +33,7 @@ func Printer(paths map[int]Road) string {
 	}
 
 	for _, p := range res {
-		//fmt.Println(strings.Join(p, " "))
+		// fmt.Println(strings.Join(p, " "))
 		str += strings.Join(p, " ") + "\n"
 	}
 
@@ -60,7 +60,7 @@ func findResLength(paths map[int]Road) int {
 func RateSort(paths *[][]string, scoring *Scoretype) {
 	for i := 0; i < len(*scoring); i++ {
 		for j := 0; j < len(*scoring); j++ {
-			if (*scoring)[i].score <= (*scoring)[j].score {
+			if (*scoring)[i].score < (*scoring)[j].score {
 				temp := (*scoring)[i]
 				(*scoring)[i] = (*scoring)[j]
 				(*scoring)[j] = temp
@@ -113,10 +113,16 @@ func GetRoomCount(room string, paths *[][]string) int {
 }
 
 func CheckIfExist(roads [][]string, path []string) bool {
+	direct := len(path) == 2
 	for _, road := range roads {
 		if len(road) == 0 || len(path) == 0 {
 			return false
 		}
+
+		if direct && len(road) == 2 {
+			return true
+		}
+
 		if DeepEqual(road[1:len(road)-1], path[1:len(path)-1]) {
 			return true
 		}
@@ -149,6 +155,13 @@ func SepRoads(paths *[][]string) map[int][][]string {
 	}
 
 	// Fill Again
+	for key, val := range res {
+		for _, path := range *paths {
+			if !CheckIfExist(val, path) {
+				res[key] = append(res[key], path)
+			}
+		}
+	}
 
 	return res
 }
@@ -157,12 +170,24 @@ func DeepEqual(path1 []string, path2 []string) bool {
 	for _, room := range path1 {
 		for _, room2 := range path2 {
 			if room2 == room {
-				fmt.Println(path1, path2)
-				fmt.Println(room2, room)
 				return true
 			}
 		}
 	}
 
 	return false
+}
+
+func GetMinPath(paths []string) string {
+	min := paths[0]
+	minLen := len(strings.Split(paths[0], "\n"))
+
+	for _, path := range paths {
+		if minLen > len(strings.Split(path, "\n")) {
+			minLen = len(strings.Split(path, "\n"))
+			min = path
+		}
+	}
+
+	return min
 }
