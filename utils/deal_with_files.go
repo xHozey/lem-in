@@ -48,6 +48,7 @@ func ParseData(data string) (Data, error) {
 	startTracker := 0
 	endTracker := 0
 	end := false
+	xAndYTracker := map[string]bool{}
 
 	for i, line := range splited {
 		if i == 0 {
@@ -75,9 +76,16 @@ func ParseData(data string) (Data, error) {
 
 		if roomsChecker(line) {
 			if links {
-				return Data{}, errors.New("file isn't valid!!")
+				return Data{}, errors.New("ERROR: invalid data format")
 			}
 			room := extractRoom(line)
+			xy := extractXY(line)
+
+			if xAndYTracker[xy] {
+				return Data{}, errors.New("ERROR: invalid data format")
+			} else {
+				xAndYTracker[xy] = true
+			}
 
 			if start {
 				parsedData.Start = room
@@ -121,6 +129,10 @@ func linksChecker(line string) bool {
 
 func extractRoom(line string) string {
 	return strings.Split(line, " ")[0]
+}
+
+func extractXY(line string) string {
+	return strings.Join(strings.Split(line, " ")[1:], "-")
 }
 
 func extractLinks(line string) []string {
