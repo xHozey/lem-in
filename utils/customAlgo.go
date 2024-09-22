@@ -50,7 +50,7 @@ func GoTo(paths *[][]string, dup *Scoretype, ants int) map[int]Road {
 			AntsGoing(i, paths, &fillRoom, &antsArrived, &road, &tunnels, dup, step)
 		}
 		*dup = Duplicated(paths)
-		Sort(paths, dup)
+		RateSort(paths, dup)
 		step++
 	}
 
@@ -78,7 +78,7 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 			if isTunnelExist {
 				(*dup)[pathIndex].score++
 
-				Sort(paths, dup)
+				RateSort(paths, dup)
 				break
 			} else {
 				(*tunnels)[tunnelKey] = append((*tunnels)[tunnelKey], step+roomIndex)
@@ -97,7 +97,7 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 		if roomIndex == len(path)-1 {
 			(*dup)[pathIndex].score++
 
-			Sort(paths, dup)
+			RateSort(paths, dup)
 
 			(*road)[ant] = Road{TheRoad: roadOfAnt, Step: step}
 

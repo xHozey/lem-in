@@ -20,8 +20,9 @@ func GetVertex(vertecies []*Vertex, key string) *Vertex {
 	return nil
 }
 
-func Printer(paths map[int]Road) {
+func Printer(paths map[int]Road) string {
 	res := make([][]string, findResLength(paths))
+	str := ""
 	for ant, path := range paths {
 		for i, room := range path.TheRoad[1:] {
 			p := fmt.Sprintf("L%d-%s", ant, room)
@@ -32,8 +33,11 @@ func Printer(paths map[int]Road) {
 	}
 
 	for _, p := range res {
-		fmt.Println(strings.Join(p, " "))
+		//fmt.Println(strings.Join(p, " "))
+		str += strings.Join(p, " ") + "\n"
 	}
+
+	return str
 }
 
 func findResLength(paths map[int]Road) int {
@@ -53,7 +57,7 @@ func findResLength(paths map[int]Road) int {
 	return maxPath + maxStep - 2
 }
 
-func Sort(paths *[][]string, scoring *Scoretype) {
+func RateSort(paths *[][]string, scoring *Scoretype) {
 	for i := 0; i < len(*scoring); i++ {
 		for j := 0; j < len(*scoring); j++ {
 			if (*scoring)[i].score <= (*scoring)[j].score {
@@ -73,14 +77,23 @@ func Sort(paths *[][]string, scoring *Scoretype) {
 	*paths = res
 }
 
+func Sort(paths *[][]string) {
+	for i := 0; i < len(*paths); i++ {
+		for j := 0; j < len(*paths); j++ {
+			if len((*paths)[i]) < len((*paths)[j]) {
+				temp := (*paths)[i]
+				(*paths)[i] = (*paths)[j]
+				(*paths)[j] = temp
+			}
+		}
+	}
+}
+
 func Duplicated(paths *[][]string) Scoretype {
 	res := make(Scoretype, len(*paths))
 	for i, path := range *paths {
-		res[i].score -= len(path)
 		res[i].path = i
-		for _, room := range path[1 : len(path)-1] {
-			res[i].score += RoomsCounter[room]
-		}
+		res[i].score += len(path)
 	}
 
 	return res
@@ -97,4 +110,59 @@ func GetRoomCount(room string, paths *[][]string) int {
 	}
 
 	return res
+}
+
+func CheckIfExist(roads [][]string, path []string) bool {
+	for _, road := range roads {
+		if len(road) == 0 || len(path) == 0 {
+			return false
+		}
+		if DeepEqual(road[1:len(road)-1], path[1:len(path)-1]) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func SepRoads(paths *[][]string) map[int][][]string {
+	res := map[int][][]string{}
+	index := 0
+
+	// Intialize
+	for _, path := range *paths {
+		passed := false
+		if len(res) == 0 {
+			res[index] = append(res[index], path)
+		} else {
+			for i, road := range res {
+				if !CheckIfExist(road, path) {
+					passed = true
+					res[i] = append(res[i], path)
+				}
+			}
+			if !passed {
+				index++
+				res[index] = append(res[index], path)
+			}
+		}
+	}
+
+	// Fill Again
+
+	return res
+}
+
+func DeepEqual(path1 []string, path2 []string) bool {
+	for _, room := range path1 {
+		for _, room2 := range path2 {
+			if room2 == room {
+				fmt.Println(path1, path2)
+				fmt.Println(room2, room)
+				return true
+			}
+		}
+	}
+
+	return false
 }

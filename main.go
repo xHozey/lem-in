@@ -43,13 +43,10 @@ func main() {
 	graph.CDFS(startVertex, targetVertex, []string{}, &paths)
 
 	dup := utils.Duplicated(&paths)
-	utils.Sort(&paths, &dup)
+	utils.RateSort(&paths, &dup)
 
 	fmt.Println("Paths")
-	for i, path := range paths {
-		if i == 6 {
-			break
-		}
+	for _, path := range paths {
 		fmt.Println(path)
 	}
 	fmt.Println("##################################")
@@ -65,5 +62,10 @@ func main() {
 
 	res := utils.GoTo(&paths, &dup, parsedData.Ants)
 
-	utils.Printer(res)
+	strRes := utils.Printer(res)
+	fmt.Print(strRes)
+
+	fmt.Println("##############################")
+	rres := utils.SepRoads(&paths)
+	fmt.Println(rres)
 }
