@@ -1,6 +1,9 @@
 package utils
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 var RoomsCounter = map[string]int{}
 
@@ -19,6 +22,7 @@ func (g *Graph) AddVertex(key string) {
 		g.Vertecies = append(g.Vertecies, &Vertex{Key: key})
 	} else {
 		fmt.Printf("Vertex %s already exist!!\n", key)
+		os.Exit(1)
 	}
 }
 
@@ -28,12 +32,17 @@ func (g *Graph) AddEdge(from string, to string) {
 
 	if fromVertex == nil {
 		fmt.Printf("Vertex %s doesn't exist!!\n", from)
-		return
+		os.Exit(1)
 	}
 
 	if toVertex == nil {
 		fmt.Printf("Vertex %s doesn't exist!!\n", to)
-		return
+		os.Exit(1)
+	}
+
+	if from == to {
+		fmt.Printf("You can't link a vertex with himself!!\n")
+		os.Exit(1)
 	}
 
 	if GetVertex(fromVertex.Adjacments, to) != nil || GetVertex(toVertex.Adjacments, from) != nil {

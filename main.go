@@ -24,7 +24,7 @@ func main() {
 
 	parsedData, err := utils.ParseData(fileData)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Please Write a valid file")
+		fmt.Fprintln(os.Stderr, err.Error())
 		return
 	}
 
@@ -63,5 +63,7 @@ func main() {
 		results = append(results, strRes)
 	}
 
+	// Print Results
+	fmt.Println(fileData + "\n")
 	fmt.Print(utils.GetMinPath(results))
 }
