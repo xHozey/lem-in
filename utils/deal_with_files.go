@@ -59,7 +59,17 @@ func ParseData(data string) (Data, error) {
 			continue
 		}
 
-		if commentChecker(line) {
+		if (start || end) && !roomsChecker(line) {
+			return Data{}, errors.New("ERROR: invalid data format")
+		} else if strings.TrimSpace(line) == "##start" {
+			start = true
+			startTracker++
+			continue
+		} else if strings.TrimSpace(line) == "##end" {
+			end = true
+			endTracker++
+			continue
+		} else if commentChecker(line) {
 			continue
 		}
 
@@ -81,12 +91,6 @@ func ParseData(data string) (Data, error) {
 		} else if linksChecker(line) {
 			links = true
 			parsedData.Links = append(parsedData.Links, extractLinks(line))
-		} else if strings.TrimSpace(line) == "##start" {
-			start = true
-			startTracker++
-		} else if strings.TrimSpace(line) == "##end" {
-			end = true
-			endTracker++
 		} else {
 			return Data{}, errors.New("ERROR: invalid data format")
 		}
@@ -106,7 +110,7 @@ func commentChecker(line string) bool {
 }
 
 func roomsChecker(line string) bool {
-	re := regexp.MustCompile(`^\w+\s+\d+\s\d+$`)
+	re := regexp.MustCompile(`^\w+\s+\d+\s+\d+$`)
 	return re.MatchString(strings.TrimSpace(line))
 }
 
