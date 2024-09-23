@@ -45,9 +45,9 @@ func ParseData(data string) (Data, error) {
 	}
 	links := false
 	start := false
+	end := false
 	startTracker := 0
 	endTracker := 0
-	end := false
 	xAndYTracker := map[string]bool{}
 
 	for i, line := range splited {
