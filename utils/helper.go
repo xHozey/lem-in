@@ -77,7 +77,7 @@ func Scoring(paths *[][]string) Scoretype {
 	res := make(Scoretype, len(*paths))
 	for i, path := range *paths {
 		res[i].path = i
-		res[i].score += len(path)
+		res[i].score = len(path)
 	}
 
 	return res
