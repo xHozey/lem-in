@@ -21,40 +21,20 @@ func GetVertex(vertecies []*Vertex, key string) *Vertex {
 }
 
 func Printer(paths map[int]Road) string {
-	res := make([][]string, findResLength(paths))
+	res := map[int][]string{}
 	str := ""
 	for ant, path := range paths {
 		for i, room := range path.TheRoad[1:] {
 			p := fmt.Sprintf("L%d-%s", ant, room)
-			if len(res) > i {
-				res[i+path.Step-1] = append(res[i+path.Step-1], p)
-			}
+			res[i+path.Step-1] = append(res[i+path.Step-1], p)
 		}
 	}
 
-	for _, p := range res {
-		// fmt.Println(strings.Join(p, " "))
-		str += strings.Join(p, " ") + "\n"
+	for i := 0; i < len(res); i++ {
+		str += strings.Join(res[i], " ") + "\n"
 	}
 
 	return str
-}
-
-func findResLength(paths map[int]Road) int {
-	maxPath := 0
-	maxStep := 0
-
-	for _, path := range paths {
-		if maxPath < len(path.TheRoad) {
-			maxPath = len(path.TheRoad)
-		}
-
-		if maxStep < path.Step {
-			maxStep = path.Step
-		}
-	}
-
-	return maxPath + maxStep - 2
 }
 
 func RateSort(paths *[][]string, scoring *Scoretype) {
