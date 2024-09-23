@@ -64,8 +64,6 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 	path := (*paths)[0]
 	pathIndex := 0
 
-	// roadOfAnt := []string{}
-
 	for roomIndex, room := range path {
 
 		// Check if tunnel exist
@@ -92,9 +90,6 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 		if roomIndex != len(path)-1 && roomIndex != 0 {
 			rooms[room] = step + roomIndex
 		}
-
-		// append rooms into the road
-		// roadOfAnt = append(roadOfAnt, room)
 
 		// if ant arrived
 		// add it to the path length
