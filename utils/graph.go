@@ -46,7 +46,7 @@ func (g *Graph) AddEdge(from string, to string) {
 	}
 
 	if GetVertex(fromVertex.Adjacments, to) != nil || GetVertex(toVertex.Adjacments, from) != nil {
-		fmt.Printf("Edge %s <--> %s already exist!!", from, to)
+		fmt.Printf("Edge %s <--> %s already exist!!\n", from, to)
 		return
 	}
 

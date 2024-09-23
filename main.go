@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"lem/utils"
 )
@@ -65,5 +66,5 @@ func main() {
 
 	// Print Results
 	fmt.Println(fileData + "\n")
-	fmt.Print(utils.GetMinPath(results))
+	fmt.Println(strings.TrimSpace(utils.GetMinPath(results)))
 }
