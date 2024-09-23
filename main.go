@@ -55,7 +55,7 @@ func main() {
 	results := []string{}
 
 	for _, combPaths := range disjointPaths {
-		dup := utils.Duplicated(&combPaths)
+		dup := utils.Scoring(&combPaths)
 		utils.RateSort(&combPaths, &dup)
 
 		res := utils.GoTo(&combPaths, &dup, parsedData.Ants)

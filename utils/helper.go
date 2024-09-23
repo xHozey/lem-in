@@ -20,6 +20,7 @@ func GetVertex(vertecies []*Vertex, key string) *Vertex {
 	return nil
 }
 
+// Print Paths based on steps
 func Printer(paths map[int]Road) string {
 	res := map[int][]string{}
 	str := ""
@@ -37,6 +38,7 @@ func Printer(paths map[int]Road) string {
 	return str
 }
 
+// Sort Based on score
 func RateSort(paths *[][]string, scoring *Scoretype) {
 	for i := 0; i < len(*scoring); i++ {
 		for j := 0; j < len(*scoring); j++ {
@@ -57,6 +59,7 @@ func RateSort(paths *[][]string, scoring *Scoretype) {
 	*paths = res
 }
 
+// Sort using buble
 func Sort(paths *[][]string) {
 	for i := 0; i < len(*paths); i++ {
 		for j := 0; j < len(*paths); j++ {
@@ -69,7 +72,8 @@ func Sort(paths *[][]string) {
 	}
 }
 
-func Duplicated(paths *[][]string) Scoretype {
+// Give each path score depend on thier length
+func Scoring(paths *[][]string) Scoretype {
 	res := make(Scoretype, len(*paths))
 	for i, path := range *paths {
 		res[i].path = i
@@ -79,19 +83,7 @@ func Duplicated(paths *[][]string) Scoretype {
 	return res
 }
 
-func GetRoomCount(room string, paths *[][]string) int {
-	res := 0
-	for _, path := range *paths {
-		for _, r := range path {
-			if room == r {
-				res++
-			}
-		}
-	}
-
-	return res
-}
-
+// Check if a the path share some rooms with the paths that we give him
 func CheckIfExist(roads [][]string, path []string) bool {
 	direct := len(path) == 2
 	for _, road := range roads {
@@ -111,6 +103,7 @@ func CheckIfExist(roads [][]string, path []string) bool {
 	return false
 }
 
+// Separate Roads to unique combinations
 func SepRoads(paths *[][]string) map[int][][]string {
 	res := map[int][][]string{}
 	index := 0
@@ -146,6 +139,7 @@ func SepRoads(paths *[][]string) map[int][][]string {
 	return res
 }
 
+// Check if two paths share some rooms
 func DeepEqual(path1 []string, path2 []string) bool {
 	for _, room := range path1 {
 		for _, room2 := range path2 {

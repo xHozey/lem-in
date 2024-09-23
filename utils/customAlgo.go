@@ -50,7 +50,7 @@ func GoTo(paths *[][]string, dup *Scoretype, ants int) map[int]Road {
 			AntsGoing(i, paths, &fillRoom, &antsArrived, &road, &tunnels, dup, step)
 		}
 		// reintialze the paths when ants are arrived
-		*dup = Duplicated(paths)
+		*dup = Scoring(paths)
 		RateSort(paths, dup)
 		step++
 	}
