@@ -121,12 +121,12 @@ func roomsChecker(line string) bool {
 	trimedLine := strings.TrimSpace(line)
 	first := trimedLine != "" && trimedLine[0] != 'L' && trimedLine[0] != '#'
 
-	re := regexp.MustCompile(`^\w+\s+\d+\s+\d+$`)
+	re := regexp.MustCompile(`^.+\s\d+\s\d+$`)
 	return re.MatchString(strings.TrimSpace(line)) && first
 }
 
 func linksChecker(line string) bool {
-	re := regexp.MustCompile(`^\w+-\w+$`)
+	re := regexp.MustCompile(`^.+-.+$`)
 	return re.MatchString(strings.TrimSpace(line))
 }
 
