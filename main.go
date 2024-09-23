@@ -64,7 +64,12 @@ func main() {
 		results = append(results, strRes)
 	}
 
+	if len(results) == 0 {
+		fmt.Println("Error")
+		return
+	}
+
 	// Print Results
 	fmt.Println(fileData + "\n")
-	fmt.Println(strings.TrimSpace(utils.GetMinPath(results)))
+	fmt.Println(strings.TrimSpace(utils.CustomGetMinPath(results)))
 }

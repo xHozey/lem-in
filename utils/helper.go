@@ -167,3 +167,27 @@ func GetMinPath(paths []string) string {
 
 	return min
 }
+
+func CustomGetMinPath(paths []string) string {
+	min := paths[0]
+	mins := []string{}
+	minLen := len(strings.Split(paths[0], "\n"))
+
+	for _, path := range paths {
+		if minLen >= len(strings.Split(path, "\n")) {
+			minLen = len(strings.Split(path, "\n"))
+			min = path
+			mins = append(mins, path)
+		}
+	}
+
+	minWords := len(strings.Split(mins[0], " "))
+	for _, path := range mins {
+		if minWords > len(strings.Split(path, " ")) {
+			minWords = len(strings.Split(path, " "))
+			min = path
+		}
+	}
+
+	return min
+}
