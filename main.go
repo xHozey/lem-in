@@ -65,7 +65,7 @@ func main() {
 	}
 
 	if len(results) == 0 {
-		fmt.Println("Error")
+		fmt.Println("Error: No Reslult possible")
 		return
 	}
 
