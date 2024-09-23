@@ -141,11 +141,13 @@ func SepRoads(paths *[][]string) map[int][][]string {
 
 // Check if two paths share some rooms
 func DeepEqual(path1 []string, path2 []string) bool {
+	checked := map[string]bool{}
 	for _, room := range path1 {
-		for _, room2 := range path2 {
-			if room2 == room {
-				return true
-			}
+		checked[room] = true
+	}
+	for _, room := range path2 {
+		if checked[room] {
+			return true
 		}
 	}
 
