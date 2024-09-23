@@ -64,7 +64,7 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 	path := (*paths)[0]
 	pathIndex := 0
 
-	roadOfAnt := []string{}
+	// roadOfAnt := []string{}
 
 	for roomIndex, room := range path {
 
@@ -94,7 +94,7 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 		}
 
 		// append rooms into the road
-		roadOfAnt = append(roadOfAnt, room)
+		// roadOfAnt = append(roadOfAnt, room)
 
 		// if ant arrived
 		// add it to the path length
@@ -104,7 +104,7 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 
 			RateSort(paths, dup)
 
-			(*road)[ant] = Road{TheRoad: roadOfAnt, Step: step}
+			(*road)[ant] = Road{TheRoad: path, Step: step}
 
 			(*antsArrived)[ant] = true
 
