@@ -1,6 +1,7 @@
 package ants
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -8,8 +9,13 @@ import (
 	"strings"
 )
 
-var AntsRepresentaion []string
+// Usage Error.
+func errorMessage() {
+	fmt.Println("ERROR: invalid data format")
+	os.Exit(0)
+}
 
+// Get data from provided file in args.
 func ReadFile() string {
 	args := os.Args[1:]
 	if len(args) != 1 {
@@ -21,122 +27,113 @@ func ReadFile() string {
 	}
 	data, err := os.ReadFile(filename)
 	if err != nil {
-		log.Fatal(err)
+		errorMessage()
 	}
 	if len(data) == 0 {
-		log.Fatal("ERROR: invalid data format")
+		errorMessage()
 	}
 	return string(data)
 }
 
-func HandleData(data string) ([]string, string, string) {
-	slicedData := strings.Split(data, "\n")
-	ants, err := strconv.Atoi(slicedData[0])
+// Getting needed info, rooms, links, ants.
+func GetData(g *Graph) (int, string, string) {
+	fileData := strings.Split(ReadFile(), "\n")
+	ants, err := strconv.Atoi(fileData[0])
 	if err != nil {
-		log.Fatal("ERROR: invalid data format")
-	}
-	roomsOn := false
-	linksOn := false
-	startRoom := ""
-	endRoom := ""
-	var roomsAndLinks []string
-	for i := 0; i < len(slicedData); i++ {
-		if slicedData[i] != "" {
-			if slicedData[i] == "##start" {
-				if !roomsOn {
-					roomsOn = true
-					if i < len(slicedData)-1 && slicedData[i+1] != "" {
-
-						tempData := strings.Split(slicedData[i+1], " ")
-						startRoom = tempData[0]
-						_, err := strconv.Atoi(tempData[1])
-						if err != nil {
-							log.Fatal("ERROR: invalid data format")
-						}
-						_, err = strconv.Atoi(tempData[2])
-						if err != nil {
-							log.Fatal("ERROR: invalid data format")
-						}
-					} else {
-						log.Fatal("ERROR: invalid data format")
-					}
-
-				} else {
-					log.Fatal("ERROR: invalid data format")
-				}
-			}
-			if slicedData[i] == "##end" {
-				if !linksOn {
-					linksOn = true
-					if i < len(slicedData)-1 && slicedData[i+1] != "" {
-						tempData := strings.Split(slicedData[i+1], " ")
-						endRoom = tempData[0]
-						_, err := strconv.Atoi(tempData[1])
-						if err != nil {
-							log.Fatal("ERROR: invalid data format")
-						}
-						_, err = strconv.Atoi(tempData[2])
-						if err != nil {
-							log.Fatal("ERROR: invalid data format")
-						}
-					} else {
-						log.Fatal("ERROR: invalid data format")
-					}
-				} else {
-					log.Fatal("ERROR: invalid data format")
-				}
-			}
-			roomsAndLinks = append(roomsAndLinks, slicedData[i])
-		} else {
-			log.Fatal("ERROR: invalid data format")
-		}
-	}
-	if !roomsOn || !linksOn {
-		log.Fatal("ERROR: invalid data format")
-	}
-	for i := 1; i <= ants; i++ {
-		AntsRepresentaion = append(AntsRepresentaion, "L"+strconv.Itoa(i))
+		errorMessage()
 	}
 
-	return roomsAndLinks, startRoom, endRoom
+	start, end := handleDataFile(fileData)
+	g.getRooms(fileData)
+
+	return ants, start, end
 }
 
-func GetRoomsAndLinks(s []string) ([]string, []string, []string) {
-	var linksFrom []string
-	var linksTo []string
-	var rooms []string
-	lockRooms := false
-	for _, val := range s {
-		if !lockRooms && strings.Contains(val, " ") {
-			var room []string
-			val = strings.TrimSpace(val)
-			room = strings.Split(val, " ")
-			if len(room) == 3 {
-				for _, val := range room[1] {
-					if val < '0' || val > '9' {
-						log.Fatal("ERROR: invalid data format")
-					}
-				}
-				for _, val := range room[2] {
-					if val < '0' || val > '9' {
-						log.Fatal("ERROR: invalid data format")
-					}
-				}
-				rooms = append(rooms, room[0])
-			} else {
-				log.Fatal("ERROR: invalid data format")
+// function to check wrong data input with extracting the start and end
+func handleDataFile(str []string) (string, string) {
+	start, end := "", ""
+	roomsSet, linksSet := false, false
+
+	for i, val := range str {
+		if val == "" {
+			errorMessage()
+		}
+		if val == "##start" || val == "##end" {
+			if i+1 >= len(str) || str[i+1] == "" {
+				errorMessage()
 			}
-		} else if strings.Contains(val, "-") {
-			lockRooms = true
-			var link []string
-			link = strings.Split(val, "-")
-			if len(link) == 2 {
-				linksFrom = append(linksFrom, link[0])
-				linksTo = append(linksTo, link[1])
-			} else {
-				log.Fatal("ERROR: invalid data format")
+			room := strings.Split(str[i+1], " ")
+			if len(room) != 3 {
+				errorMessage()
+			}
+			if val == "##start" {
+				if roomsSet {
+					errorMessage()
+				}
+				getRoom(room, &start)
+				roomsSet = true
+			} else if val == "##end" {
+				if linksSet {
+					errorMessage()
+				}
+				getRoom(room, &end)
+				linksSet = true
 			}
 		}
 	}
-	return linksFrom, linksTo, rooms
+
+	if !roomsSet || !linksSet {
+		errorMessage()
+	}
+
+	return start, end
+}
+
+// Function to get room with check coordinations
+func getRoom(str []string, room *string) {
+	checkCoordinates(str[1])
+	checkCoordinates(str[2])
+	*room = str[0]
+}
+
+// Function to extract all rooms from the data
+func (g *Graph) getRooms(str []string) {
+	lockRooms := false
+
+	for _, val := range str[1:] {
+		if strings.HasPrefix(val, "#") || strings.HasPrefix(val, "L") {
+			continue
+		}
+		if strings.Contains(val, " ") {
+			if lockRooms {
+				errorMessage()
+			}
+			room := strings.Split(val, " ")
+			if len(room) == 3 {
+				checkCoordinates(room[1])
+				checkCoordinates(room[2])
+				g.AddVertix(room[0])
+			} else {
+				errorMessage()
+			}
+		} else if strings.Contains(val, "-") {
+			links := strings.Split(val, "-")
+			if len(links) == 2 {
+				lockRooms = true
+				g.AddIndirectedEdge(links[0], links[1])
+			} else {
+				errorMessage()
+			}
+		} else {
+			errorMessage()
+		}
+	}
+}
+
+// Function to check cordinations
+func checkCoordinates(s string) {
+	_, err := strconv.Atoi(s)
+	if err != nil {
+		errorMessage()
+	}
 }

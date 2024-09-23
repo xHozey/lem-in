@@ -9,28 +9,28 @@ type Graph struct {
 type Vertix struct {
 	Key      string
 	Adjacent []*Vertix
-	counter  int
 }
 
+// Add nodes to our struct
 func (g *Graph) AddVertix(name string) {
 	if !g.ContainsVertix(name) {
 		g.Vertices = append(g.Vertices, &Vertix{Key: name})
 	}
 }
 
+// Add an indirected edge between from and to
 func (g *Graph) AddIndirectedEdge(from, to string) {
 	fromVertix := g.getVertix(from)
 	toVertix := g.getVertix(to)
 	if fromVertix != nil && toVertix != nil {
 		if !g.containsAdjacent(to, fromVertix) && !g.containsAdjacent(from, toVertix) {
-			fromVertix.counter++
-			toVertix.counter++
 			fromVertix.Adjacent = append(fromVertix.Adjacent, toVertix)
 			toVertix.Adjacent = append(toVertix.Adjacent, fromVertix)
 		}
 	}
 }
 
+// Get vertix from provided key
 func (g *Graph) getVertix(key string) *Vertix {
 	for i, v := range g.Vertices {
 		if v.Key == key {
@@ -40,6 +40,7 @@ func (g *Graph) getVertix(key string) *Vertix {
 	return nil
 }
 
+// Check vertix adjacent list if it exist
 func (g *Graph) containsAdjacent(key string, s *Vertix) bool {
 	for _, v := range s.Adjacent {
 		if v.Key == key {
@@ -49,6 +50,7 @@ func (g *Graph) containsAdjacent(key string, s *Vertix) bool {
 	return false
 }
 
+// Check if the vertix exists
 func (g *Graph) ContainsVertix(key string) bool {
 	for _, v := range g.Vertices {
 		if v.Key == key {
@@ -58,6 +60,7 @@ func (g *Graph) ContainsVertix(key string) bool {
 	return false
 }
 
+// Print our graph
 func (g *Graph) PrintGraph() {
 	for _, val := range g.Vertices {
 		fmt.Printf("Room %v :", val.Key)
