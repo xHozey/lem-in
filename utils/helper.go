@@ -168,6 +168,7 @@ func GetMinPath(paths []string) string {
 	return min
 }
 
+// Get min path based on turns and movements
 func CustomGetMinPath(paths []string) string {
 	min := paths[0]
 	mins := []string{}
