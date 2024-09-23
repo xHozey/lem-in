@@ -49,6 +49,7 @@ func GoTo(paths *[][]string, dup *Scoretype, ants int) map[int]Road {
 			}
 			AntsGoing(i, paths, &fillRoom, &antsArrived, &road, &tunnels, dup, step)
 		}
+		// reintialze the paths when ants are arrived
 		*dup = Duplicated(paths)
 		RateSort(paths, dup)
 		step++
@@ -62,16 +63,12 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 
 	path := (*paths)[0]
 	pathIndex := 0
-	/* (*fillPath)[pIndex] = true */
-
-	// Clean up the road
 
 	roadOfAnt := []string{}
 
 	for roomIndex, room := range path {
 
-		isRoomFill := slices.Contains((*fillRoom)[room], step+roomIndex)
-
+		// Check if tunnel exist
 		if roomIndex+1 < len(path) {
 			tunnelKey := room + "-" + path[roomIndex+1]
 			isTunnelExist := slices.Contains((*tunnels)[tunnelKey], step+roomIndex)
@@ -85,15 +82,23 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 			}
 		}
 
+		// Check if room is fill
+		isRoomFill := slices.Contains((*fillRoom)[room], step+roomIndex)
 		if isRoomFill {
 			break
 		}
+
+		// mark room to show that is fill in a specific step
 		if roomIndex != len(path)-1 && roomIndex != 0 {
 			rooms[room] = step + roomIndex
 		}
 
+		// append rooms into the road
 		roadOfAnt = append(roadOfAnt, room)
 
+		// if ant arrived
+		// add it to the path length
+		// add the road and the fill rooms to the main variables
 		if roomIndex == len(path)-1 {
 			(*dup)[pathIndex].score++
 
