@@ -71,5 +71,5 @@ func main() {
 
 	// Print Results
 	fmt.Println(fileData + "\n")
-	fmt.Println(strings.TrimSpace(utils.CustomGetMinPath(results)))
+	fmt.Println(strings.TrimSpace(utils.GetMinPath(results)))
 }

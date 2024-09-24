@@ -154,22 +154,8 @@ func DeepEqual(path1 []string, path2 []string) bool {
 	return false
 }
 
-func GetMinPath(paths []string) string {
-	min := paths[0]
-	minLen := len(strings.Split(paths[0], "\n"))
-
-	for _, path := range paths {
-		if minLen > len(strings.Split(path, "\n")) {
-			minLen = len(strings.Split(path, "\n"))
-			min = path
-		}
-	}
-
-	return min
-}
-
 // Get min path based on turns and movements
-func CustomGetMinPath(paths []string) string {
+func GetMinPath(paths []string) string {
 	min := paths[0]
 	mins := []string{}
 	minLen := len(strings.Split(paths[0], "\n"))
