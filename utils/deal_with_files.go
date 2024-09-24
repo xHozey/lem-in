@@ -53,7 +53,7 @@ func ParseData(data string) (Data, error) {
 	for i, line := range splited {
 		if i == 0 {
 			num, err := strconv.Atoi(line)
-			if err != nil || num == 0 {
+			if err != nil || num <= 0 {
 				return Data{}, errors.New("ERROR: invalid data format, invalid number of Ants")
 			}
 			parsedData.Ants = num
