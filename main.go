@@ -12,20 +12,20 @@ func main() {
 	// Check args
 	args := os.Args[1:]
 	if len(args) != 1 || !utils.CheckFileName(args[0]) {
-		fmt.Fprintln(os.Stderr, "Usage: go run . filename.txt")
+		fmt.Println("Usage: go run . filename.txt")
 		return
 	}
 
 	// Read File And parse data
 	fileData, err := utils.ReadFile(args[0])
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Please Write a valid file")
+		fmt.Println("Please Write a valid file")
 		return
 	}
 
 	parsedData, err := utils.ParseData(fileData)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
+		fmt.Println(err.Error())
 		return
 	}
 
