@@ -1,16 +1,5 @@
 package ants
 
-import "fmt"
-
-type Graph struct {
-	Vertices []*Vertix
-}
-
-type Vertix struct {
-	Key      string
-	Adjacent []*Vertix
-}
-
 // Add nodes to our struct
 func (g *Graph) AddVertix(name string) {
 	if !g.ContainsVertix(name) {
@@ -58,15 +47,4 @@ func (g *Graph) ContainsVertix(key string) bool {
 		}
 	}
 	return false
-}
-
-// Print our graph
-func (g *Graph) PrintGraph() {
-	for _, val := range g.Vertices {
-		fmt.Printf("Room %v :", val.Key)
-		for _, v := range val.Adjacent {
-			fmt.Printf(" %v ", v.Key)
-		}
-		fmt.Println("")
-	}
 }

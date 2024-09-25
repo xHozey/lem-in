@@ -36,17 +36,18 @@ func ReadFile() string {
 }
 
 // Getting needed info, rooms, links, ants.
-func GetData(g *Graph) (int, string, string) {
-	fileData := strings.Split(ReadFile(), "\n")
-	ants, err := strconv.Atoi(fileData[0])
+func GetData(g *Graph) (int, string, string, string) {
+	fileData := ReadFile()
+	fileDataSplitted := strings.Split(fileData, "\n")
+	ants, err := strconv.Atoi(fileDataSplitted[0])
 	if err != nil {
 		errorMessage()
 	}
 
-	start, end := handleDataFile(fileData)
-	g.getRooms(fileData)
+	start, end := handleDataFile(fileDataSplitted)
+	g.getRooms(fileDataSplitted)
 
-	return ants, start, end
+	return ants, start, end, fileData
 }
 
 // function to check wrong data input with extracting the start and end

@@ -1,5 +1,0 @@
-package ants
-
-func ValidPath() {
-	
-}
