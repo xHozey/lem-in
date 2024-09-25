@@ -69,26 +69,26 @@ func AntsGoing(ant int, paths *[][]string, fillRoom *map[string][]int, antsArriv
 		// Check if tunnel exist
 		if roomIndex+1 < len(path) {
 			tunnelKey := room + "-" + path[roomIndex+1]
-			isTunnelExist := slices.Contains((*tunnels)[tunnelKey], step+roomIndex)
+			isTunnelExist := slices.Contains((*tunnels)[tunnelKey], step)
 			if isTunnelExist {
 				(*dup)[pathIndex].score++
 
 				RateSort(paths, dup)
 				break
 			} else {
-				(*tunnels)[tunnelKey] = append((*tunnels)[tunnelKey], step+roomIndex)
+				(*tunnels)[tunnelKey] = append((*tunnels)[tunnelKey], step)
 			}
 		}
 
 		// Check if room is fill
-		isRoomFill := slices.Contains((*fillRoom)[room], step+roomIndex)
+		isRoomFill := slices.Contains((*fillRoom)[room], step)
 		if isRoomFill {
 			break
 		}
 
 		// mark room to show that is fill in a specific step
 		if roomIndex != len(path)-1 && roomIndex != 0 {
-			rooms[room] = step + roomIndex
+			rooms[room] = step
 		}
 
 		// if ant arrived
